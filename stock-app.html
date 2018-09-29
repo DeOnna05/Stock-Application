@@ -10,18 +10,20 @@
 <body>
   <div class="container">
         <h1>Stock Search</h1>
-
-        <!-- stocks will get dumped here -->
-        <div id="stocks-view"></div>
-    
+    <!--Input form to search for new stocks-->
+    <div>
         <form id="stock-form">
-          <label for="stock-input">Add a Stock Symbol</label>
+          <label for="stock-input">Add Stock Symbol</label>
           <input type="text" id="stock-input">
           <br>
     
           <!-- Button triggers new stock to be added -->
-          <input id="add-stock" type="submit" value="Add a Stock Symbol">
+          <input id="add-stock" type="submit" value="Add">
         </form>
+      </div>
+
+        <!-- stocks will get dumped here -->
+        <div id="view-stocks"></div>
    
     <table class="table">
       <thead>
