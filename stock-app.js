@@ -1,38 +1,75 @@
 // Initial array of stocks
-const stocksList = ['BTCE', 'OKCoin', 'Coinbase', 'Cexio', 'Coinfloor', 'Gemini', 'BitBay', 'LiveCoin', 'Luno', 'Coinroom', 'BitFlip', 'Coincap', 'BitMart', 'Buda'];
+const stocksList = ['AMZN', 'NFLX', 'AAPL', 'NKE', 'MMM', 'P', 'BBY', 'CCL', 'KO', 'DAL', 'ELF', 'FDX', 'GPS', 'JCP', 'VAC', 'K', 'SHAK', 'LUV',];
 
 const displayStock = function(){
 
+  const stock = $(this).attr('data');
+
+  const queryURL = `https://api.iextrading.com/1.0/stock/${stock}/batch?types=quote,news&range=1m&last=1`;
+
+  const logoURL = `https://api.iextrading.com/1.0/stock/${stock}/logo`;
+
+  const newsURL = `https://api.iextrading.com/1.0/stock/stock/${stock}/news`;
+  // console.log(stock);
   
+
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  }).then(function(response) {
+
+    console.log(queryURL);
+
+    console.log(response)
+    
+  // console.log(response)
+
+//variables for company name, stock symbol, and price to be displayed
+  const companyName = response.quote.companyName;
+ 
+  const stockSymbol = response.quote.symbol;
+
+  const price = response.quote.latestPrice;
+
+  
+  $.ajax({
+    url: logoURL,
+    Method: 'GET'
+  }).then(function(response){
+
+    const logo = response.url;
+
+    console.log(logo);
+
+  $.ajax({
+    url: newsURL,
+    method: 'GET'
+  }).then(function(response){
+    console.log(reponse)
+
+    const newsHeadline = response.headline;
+
+    const newsLink = response.url;
+
+    
+  $('tbody').append(`<tr><td>${companyName}</td> + <td>${stockSymbol}</td> + <td>${price}</td> + <td><img src="${logo}"></td> + <td>${newsHeadline, newsLink}</td></tr>`);
+
+
+  });
+ 
+  // $('#stockDisplay').append(stockDisplay);
+
+  });
+
+
+})
+
 }
 
 
-// function (event) {
-// //   event.preventDefault();
-//   const stock = $(this).val();
-//   const queryURL = `https://min-api.cryptocompare.com/data/all/exchanges`;
-
-//   console.log(stock);
-//   console.log(queryURL);
-
-//   $.ajax({
-//     url: queryURL,
-//     method: "GET"
-//   }).then(function (response) {
-
-//     console.log(response)
-
-//   })
 
 
-// })
-
-// // Calling the renderButtons function to display the initial list of stocks
-// render();
-
-
-
-// Function for displaying stock data
+// Calling the render function to display the initial list of stocks
 const render = function () {
   $("#view-stocks").empty()  // Deletes contents in div prior to adding new stocks
 
@@ -74,7 +111,7 @@ const addButton = function (event) {
 $('#add-stock').on('click', addButton);
 
 //
-$('#stocks-view').on('click', '.get-stock', displayStock);
+$('#view-stocks').on('click', '.stockBtn', displayStock);
 
 render();
 
