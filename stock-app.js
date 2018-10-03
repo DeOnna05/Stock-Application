@@ -1,3 +1,4 @@
+
 // Initial array of stocks
 const stocksList = ['AMZN', 'NFLX', 'AAPL', 'NKE', 'MMM', 'P', 'BBY', 'CCL', 'KO', 'DAL', 'ELF', 'FDX', 'GPS', 'JCP', 'VAC', 'K', 'SHAK', 'LUV',];
 
@@ -9,7 +10,8 @@ const displayStock = function(){
 
   const logoURL = `https://api.iextrading.com/1.0/stock/${stock}/logo`;
 
-  const newsURL = `https://api.iextrading.com/1.0/stock/stock/${stock}/news`;
+  const newsURL = `https://api.iextrading.com/1.0/stock/${stock}/news`;
+
   // console.log(stock);
   
 
@@ -20,7 +22,7 @@ const displayStock = function(){
 
     console.log(queryURL);
 
-    console.log(response)
+    // console.log(response)
     
   // console.log(response)
 
@@ -39,25 +41,24 @@ const displayStock = function(){
 
     const logo = response.url;
 
-    console.log(logo);
+    
 
   $.ajax({
     url: newsURL,
     method: 'GET'
   }).then(function(response){
-    console.log(reponse)
+    console.log(response);
 
-    const newsHeadline = response.headline;
+    const newsHeadline = response[0].headline;
 
-    const newsLink = response.url;
+     const newsLink = response[0].url;
+    // console.log(newsLink);
 
     
-  $('tbody').append(`<tr><td>${companyName}</td> + <td>${stockSymbol}</td> + <td>${price}</td> + <td><img src="${logo}"></td> + <td>${newsHeadline, newsLink}</td></tr>`);
+  $('tbody').append(`<tr><td>${companyName}</td> + <td>${stockSymbol}</td> + <td>${price}</td> + <td><img src=${logo}></td> + <td><a href=${newsLink}>${newsHeadline}</a></td></tr>`);
 
 
   });
- 
-  // $('#stockDisplay').append(stockDisplay);
 
   });
 
@@ -65,8 +66,6 @@ const displayStock = function(){
 })
 
 }
-
-
 
 
 // Calling the render function to display the initial list of stocks
@@ -91,28 +90,42 @@ const render = function () {
   }
 }
 
+validationURL = `https://api.iextrading.com/1.0/ref-data/symbols`;
+
+  let validationList = [];
+  $.ajax({
+    url: validationURL,
+    method: 'GET'
+  }).then(function(response) {
+    console.log(response)
+    // for (let i = 0; i < response.length; i++)
+    //   validationList[i].push(list)
+    //   list = []
+
+  });
+
 //click event button function
 const addButton = function (event) {
   event.preventDefault();
   // grab the text the user types into the input field
-  let newStock = $("#stock-input").val().trim();
-  for (let i = 0; i < stocksList.length; i++) {
-    if (newStock === stocksList[i]) {
+  let newBtn = $("#stock-input").val().trim();
+  for (let i = 0; i < validationList.length; i++) {
+    console.log(stocksList)
+    if (newBtn === validationList[i]) {
       // add the new stock into the stocks array
-      stocksList.push(newStock);
+      stocksList.push(newBtn);
       //deletes the contents of the stock search input
       $("#stock-input").val("")
     }
   }
-  render();
-}
 
-//event listenter for submit button
+//event listentes
 $('#add-stock').on('click', addButton);
 
-//
 $('#view-stocks').on('click', '.stockBtn', displayStock);
 
+render();
+}
 render();
 
 
