@@ -2,8 +2,8 @@
 // Initial array of stocks
 const stocksList = ['AMZN', 'NFLX', 'AAPL', 'NKE', 'MMM', 'P', 'BBY', 'CCL', 'KO', 'DAL', 'ELF', 'FDX', 'GPS', 'JCP', 'VAC', 'K', 'SHAK', 'LUV',];
 
-const displayStock = function(){
-
+const displayStock = function(event){
+event.preventDefault();
   const stock = $(this).attr('data');
 
   const queryURL = `https://api.iextrading.com/1.0/stock/${stock}/batch?types=quote,news&range=1m&last=1`;
@@ -73,20 +73,20 @@ const render = function () {
   $("#view-stocks").empty()  // Deletes contents in div prior to adding new stocks
 
   for (let i = 0; i < stocksList.length; i++) { // Loop through the array of stocks, then generate buttons for each stock in the array
-    const newButton = $('<button>');
+    const buttons = $('<button>');
 
 //adds class stockBtn to new button
-    newButton.addClass('stockBtn');
+    buttons.addClass('stockBtn');
 
 //adds data-attribute
-    newButton.attr('data', stocksList[i]);
+    buttons.attr('data', stocksList[i]);
 
 //grabbing button text
-    newButton.text(stocksList[i])
+    buttons.text(stocksList[i])
 
 
 //adds button to the div
-    $("#view-stocks").append(newButton);
+    $("#view-stocks").append(buttons);
   }
 }
 
@@ -109,13 +109,15 @@ const addButton = function (event) {
   event.preventDefault();
   // grab the text the user types into the input field
   let newBtn = $("#stock-input").val().trim();
+  let newBtnUppercase = newBtn.toUpperCase();
   for (let i = 0; i < validationList.length; i++) {
-    console.log(stocksList)
-    if (newBtn === validationList[i]) {
+    console.log(validationList)
+    if (newBtnUppercase === validationList[i]) {
       // add the new stock into the stocks array
-      stocksList.push(newBtn);
+      stocksList.push(newBtnUppercase);
       //deletes the contents of the stock search input
-      $("#stock-input").val("")
+    $("#stock-input").val("");
+     
     }
   }
 
