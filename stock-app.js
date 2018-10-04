@@ -3,6 +3,7 @@
 const stocksList = ['AMZN', 'NFLX', 'AAPL', 'NKE', 'MMM', 'P', 'BBY', 'CCL', 'KO', 'DAL', 'ELF', 'FDX', 'GPS', 'JCP', 'VAC', 'K', 'SHAK', 'LUV',];
 
 const displayStock = function(event){
+  console.log("Hello")
 event.preventDefault();
   const stock = $(this).attr('data');
 
@@ -109,25 +110,26 @@ const addButton = function (event) {
   event.preventDefault();
   // grab the text the user types into the input field
   let newBtn = $("#stock-input").val().trim();
+  console.log(newBtn)
   let newBtnUppercase = newBtn.toUpperCase();
-  for (let i = 0; i < validationList.length; i++) {
+  console.log(newBtnUppercase)
+ 
     console.log(validationList)
-    if (newBtnUppercase === validationList[i]) {
+    if (validationList.indexOf(newBtnUppercase)) {
       // add the new stock into the stocks array
       stocksList.push(newBtnUppercase);
+
       //deletes the contents of the stock search input
     $("#stock-input").val("");
-     
+      return render();
     }
-  }
+  } //indexOf instead of for loop
 
 //event listentes
 $('#add-stock').on('click', addButton);
 
 $('#view-stocks').on('click', '.stockBtn', displayStock);
 
-render();
-}
 render();
 
 
