@@ -2,8 +2,12 @@
 // Initial array of stocks
 const stocksList = ['AMZN', 'NFLX', 'AAPL', 'NKE', 'MMM', 'P', 'BBY', 'CCL', 'KO', 'DAL', 'ELF', 'FDX', 'GPS', 'JCP', 'VAC', 'K', 'SHAK', 'LUV',];
 
+let validationList = [];
+
+
+
 const displayStock = function(event){
-  console.log("Hello")
+  // console.log("Hello")
 event.preventDefault();
   const stock = $(this).attr('data');
 
@@ -13,19 +17,12 @@ event.preventDefault();
 
   const newsURL = `https://api.iextrading.com/1.0/stock/${stock}/news`;
 
-  // console.log(stock);
-  
-
   $.ajax({
     url: queryURL,
     method: "GET"
   }).then(function(response) {
 
-    console.log(queryURL);
-
-    // console.log(response)
-    
-  // console.log(response)
+    // console.log(queryURL);
 
 //variables for company name, stock symbol, and price to be displayed
   const companyName = response.quote.companyName;
@@ -34,7 +31,6 @@ event.preventDefault();
 
   const price = response.quote.latestPrice;
 
-  
   $.ajax({
     url: logoURL,
     Method: 'GET'
@@ -42,34 +38,64 @@ event.preventDefault();
 
     const logo = response.url;
 
-    
-
   $.ajax({
     url: newsURL,
     method: 'GET'
   }).then(function(response){
-    console.log(response);
+    // console.log(response);
 
     const newsHeadline = response[0].headline;
 
-     const newsLink = response[0].url;
-    // console.log(newsLink);
-
+    const newsLink = response[0].url;
     
   $('tbody').append(`<tr><td>${companyName}</td> + <td>${stockSymbol}</td> + <td>${price}</td> + <td><img src=${logo}></td> + <td><a href=${newsLink}>${newsHeadline}</a></td></tr>`);
-
-
   });
-
   });
-
-
 })
-
 }
 
+validationURL = `https://api.iextrading.com/1.0/ref-data/symbols`;
 
-// Calling the render function to display the initial list of stocks
+  $.ajax({
+    url: validationURL,
+    method: 'GET'
+  }).then(function(response) {
+    for(let i = 0; i < response.length; i++){
+     validationList.push(response[i].symbol)
+    }
+      console.log(validationList)
+  });
+
+//click event button function
+const addButton = function (event) {
+  event.preventDefault();
+  // grab the text the user types into the input field
+  let newBtn = $("#stock-input").val().trim();
+  // console.log(newBtn)
+  //change input to uppercase
+  let newBtnUppercase = newBtn.toUpperCase();
+  console.log(newBtnUppercase)
+  // console.log(newBtnUppercase)
+  // console.log(validationList.indexOf(newBtnUppercase))
+  let index = validationList.indexOf(newBtnUppercase)
+  //  console.log(index)
+    if (index > -1) {
+      
+      // add the new stock into the stocks array
+      
+       stocksList.push(newBtnUppercase);
+      
+      // deletes the contents of the stock search input
+      render();
+    $("#stock-input").val("");
+     
+    } else {
+      $("#stock-input").val("");  
+    }
+  } 
+  
+  
+  // Calling the render function to display the initial list of stocks
 const render = function () {
   $("#view-stocks").empty()  // Deletes contents in div prior to adding new stocks
 
@@ -91,43 +117,8 @@ const render = function () {
   }
 }
 
-validationURL = `https://api.iextrading.com/1.0/ref-data/symbols`;
-
-  let validationList = [];
-  $.ajax({
-    url: validationURL,
-    method: 'GET'
-  }).then(function(response) {
-    console.log(response)
-    // for (let i = 0; i < response.length; i++)
-    //   validationList[i].push(list)
-    //   list = []
-
-  });
-
-//click event button function
-const addButton = function (event) {
-  event.preventDefault();
-  // grab the text the user types into the input field
-  let newBtn = $("#stock-input").val().trim();
-  console.log(newBtn)
-  let newBtnUppercase = newBtn.toUpperCase();
-  console.log(newBtnUppercase)
- 
-    console.log(validationList)
-    if (validationList.indexOf(newBtnUppercase)) {
-      // add the new stock into the stocks array
-      stocksList.push(newBtnUppercase);
-
-      //deletes the contents of the stock search input
-    $("#stock-input").val("");
-      return render();
-    }
-  } //indexOf instead of for loop
-
 //event listentes
 $('#add-stock').on('click', addButton);
-
 $('#view-stocks').on('click', '.stockBtn', displayStock);
 
 render();
